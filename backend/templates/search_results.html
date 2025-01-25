@@ -1,0 +1,11 @@
+<h2>Search Results</h2>
+<ul>
+    {% for video in videos %}
+        <li>
+            <a href="{{ video.url }}" target="_blank">
+                <img src="{{ video.thumbnail }}" alt="{{ video.title }}" width="100">
+                <p>{{ video.title }}</p>
+            </a>
+        </li>
+    {% endfor %}
+</ul>
