@@ -10,3 +10,14 @@
         background-position: bottom center;
         background-color: #1B1B1B;
 }
+
+.card1{
+    padding: 10px;
+        border-radius: 0.375rem;
+        background-image: url('https://i.postimg.cc/4dnZCH03/background.png');
+        background-position: bottom center;
+        background-color: #1B1B1B;
+        height: 250px; 
+        width: 450px;
+
+}

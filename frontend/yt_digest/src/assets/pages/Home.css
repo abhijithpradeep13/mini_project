@@ -35,10 +35,7 @@ ul {
     list-style: none;
 }
 
-.container {
-    max-width: 1080px;
-    margin: auto;
-}
+
 
 .row {
     display: flex;

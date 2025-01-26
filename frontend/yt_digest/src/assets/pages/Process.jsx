@@ -14,14 +14,23 @@ const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
       className="container"
       style={{
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
         alignItems: "center",
         height: "100vh",
         flexDirection: "row",
       }}
     >
-      <div className="left">
-        <Ytcard videoId={yturl} />
+      <div
+        className="left"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div className="card1">
+          <Ytcard videoId={yturl} />
+        </div>
       </div>
       <div
         className="right-container"
@@ -29,12 +38,13 @@ const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          height: "700px",
+          width: "800px",
           flexDirection: "column",
-          
-          padding: 10,
+          margin: "25px",
+          padding: "10px",
           borderRadius: "15px",
-          
+          marginRight:"15px"
         }}
       >
         <div
@@ -42,6 +52,10 @@ const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
           style={{
             order: 1,
             backgroundColor: "white",
+            padding: "20px",
+            border: "5px black",
+            borderRadius: "5px black",
+            maxHeight: "550px",
           }}
         >
           <Summary />
@@ -53,7 +67,7 @@ const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
-            
+
             order: 2,
             margin: 30,
           }}

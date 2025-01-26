@@ -1,12 +1,12 @@
 import React from 'react'
 import { useContext } from "react";
 import {  SummaryresultContext } from "../dbstack/context";
-
+import "./summary.css"
 
 function Summary() {
   const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
   
-  return <div>{summaryresult}</div>;
+  return <p className="scrollable">{summaryresult} Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa officiis itaque distinctio commodi! Dignissimos, ducimus consectetur recusandae necessitatibus numquam debitis doloremque ullam, dolorem facere commodi in quia repudiandae animi iure? Quia ducimus voluptatem numquam impedit placeat voluptas, inventore ullam fugiat dolorem nostrum ea, quasi rem velit? Eius laudantium voluptatibus, at necessitatibus possimus dignissimos quae soluta saepe unde ea consequatur libero! Ut voluptatibus enim labore quae quos nobis quia eum! Fuga voluptates consequatur consectetur sed sit ipsa ratione, quasi sapiente. Explicabo architecto alias cum totam asperiores id? Perspiciatis blanditiis quas optio adipisci, qui nostrum hic provident, exercitationem amet unde dolorem pariatur?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nihil Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi odio dignissimos neque molestiae error ad obcaecati voluptate recusandae magni, nam laudantium. Perferendis unde quibusdam iusto. Sunt alias, sapiente molestiae voluptatum magni, libero natus quisquam rem necessitatibus, praesentium iusto hic nihil rerum quia repellendus beatae fugit quod dicta cupiditate aliquid non consectetur placeat aperiam! Consequatur porro laborum deleniti, ipsam asperiores et ullam qui voluptatibus blanditiis aperiam earum fugit vero dolorum expedita animi quia error ad a libero natus at. Sed nobis impedit beatae accusamus id nostrum eos, minus optio! Porro, aut ipsum eveniet beatae impedit velit nostrum sequi aliquid illum molestiae blanditiis doloremque, commodi recusandae quo minus. Quasi nesciunt, dolorum perferendis commodi saepe porro earum minima a inventore nostrum veritatis illo laboriosam eos. Facilis necessitatibus ducimus consectetur atque blanditiis ut nihil non eligendi voluptatibus, iste fugit minus corporis hic? Ea reiciendis cupiditate nulla quibusdam vel maxime nesciunt sit, nam amet, molestiae quasi repudiandae fugit commodi esse iste. Corporis vel tempore sequi doloremque vitae provident ea libero temporibus velit adipisci culpa accusantium, veritatis consequuntur blanditiis incidunt asperiores amet aperiam at. Beatae sequi excepturi officia corporis a? Recusandae cum deserunt, excepturi ex inventore ullam dolore! Fuga suscipit repudiandae, sunt illum quis harum sint!.</p>;
 }
 
 export default Summary

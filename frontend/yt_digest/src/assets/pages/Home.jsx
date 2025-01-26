@@ -1,8 +1,8 @@
 import React from "react";
 import "./Home.css";
 import { useRef } from "react";
-import { useNavigate,Link } from "react-router-dom";
-import { useContext} from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useContext, useState } from "react";
 import {
   UrlContext,
   searchresultContext,
@@ -14,36 +14,40 @@ import axios from "axios";
 import Loading from "./Loading";
 
 function Home() {
-
   const { yturl, setyturl } = useContext(UrlContext);
   const { searchresult, setsearchresult } = useContext(searchresultContext);
   const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
   const { lang, setlang } = useContext(LangresultContext);
-  
+
   const { isLoading, setIsLoading } = useContext(LoadingstateContext);
-   const navigate = useNavigate();
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleToggle = () => {
+    setIsChecked((prevState) => !prevState);
+  };
+
+  const navigate = useNavigate();
 
   const urlRef = useRef(null);
-  const langRef1 = useRef(null)
+  const langRef1 = useRef(null);
   const langRef2 = useRef(null);
   const searchRef = useRef(null);
 
+  const options = [
+    "english",
+    "french",
+    "spanish",
+    "german",
+    "chinese",
+    "hindi",
+    "arabic",
+    "malayalam",
+  ];
 
-  
-    const options = [
-      "english",
-      "french",
-      "spanish",
-      "german",
-      "chinese",
-      "hindi",
-      "arabic",
-      "malayalam",
-    ];
-
-  const submithandler1 =async () => {
-    const url = urlRef.current.value; 
-    const lang = langRef1.current.value; 
+  const submithandler1 = async () => {
+    const url = urlRef.current.value;
+    const lang = langRef1.current.value;
 
     console.log("URL:", url);
     console.log("Language:", lang);
@@ -56,34 +60,33 @@ function Home() {
       const videoId = match[1];
 
       if (match) {
-      const videoId = match[1];
-      setyturl(`https://www.youtube.com/embed/${videoId}`); // Set YouTube embed URL
+        const videoId = match[1];
+        setyturl(`https://www.youtube.com/embed/${videoId}`); // Set YouTube embed URL
 
-      try {
-        setIsLoading(true); // Show loading state
-        const response = await axios.post("http://127.0.0.1:5000/api/process", {
-          url,
-          lang,
-        });
-        setsummaryresult(response.data.translated_text); // Save translated text in context
-        navigate("/Process"); // Navigate to /Process after receiving response
-      } catch (error) {
-        console.error("Error during processing:", error);
-        alert("An error occurred. Please try again.");
-      } finally {
-        setIsLoading(false); // Hide loading state
+        try {
+          setIsLoading(true); // Show loading state
+          const response = await axios.post(
+            "http://127.0.0.1:5000/api/process",
+            {
+              url,
+              lang,
+            }
+          );
+          setsummaryresult(response.data.translated_text); // Save translated text in context
+          navigate("/Process"); // Navigate to /Process after receiving response
+        } catch (error) {
+          console.error("Error during processing:", error);
+          alert("An error occurred. Please try again.");
+        } finally {
+          setIsLoading(false); // Hide loading state
+        }
+      } else {
+        alert("Please enter a valid YouTube URL.");
       }
-    } else {
-      alert("Please enter a valid YouTube URL.");
     }
   };
-    
 
-   
-  };
-
-
-  const submithandler2 = async() => {
+  const submithandler2 = async () => {
     const search = searchRef.current.value; // Extract the value
     const lang = langRef2.current.value; // Extract the value
     setlang(lang);
@@ -91,20 +94,20 @@ function Home() {
     console.log("Language:", lang);
     setIsLoading(true); // Show loading state
 
-
     try {
-        setIsLoading(true); // Show loading state
-        const response = await axios.post("http://127.0.0.1:5000/api/search", { search, lang });
-        setsearchresult(response.data.videos);
-        navigate("/search");
-      } catch (error) {
-        console.error("Error during processing:", error);
-        alert("An error occurred. Please try again.");
-      } finally {
-        setIsLoading(false); // Hide loading state
+      setIsLoading(true); // Show loading state
+      const response = await axios.post("http://127.0.0.1:5000/api/search", {
+        search,
+        lang,
+      });
+      setsearchresult(response.data.videos);
+      navigate("/search");
+    } catch (error) {
+      console.error("Error during processing:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading state
     }
-    
-    
   };
 
   return (
@@ -122,10 +125,39 @@ function Home() {
         <div className="form">
           <div className="text-center">
             <h6>
-              <span>URL</span> <span>SEARCH</span>
+              <span
+                className="url"
+                style={{
+                  color: isChecked ? "white" : "crimson",
+                  padding: "10px",
+                  marginRight: "10px",
+                  transform: isChecked ? "scale(1)" : "scale(2)",
+                  transition: "all 0.5s ease",
+                }}
+              >
+                URL
+              </span>
+              <span
+                className="search"
+                style={{
+                  color: isChecked ? "crimson" : "white",
+                  marginLeft: "10px",
+                  transform: isChecked ? "scale(2)" : "scale(1)",
+                  transition: "all 0.5s ease",
+                }}
+              >
+                SEARCH
+              </span>
             </h6>
-            <input type="checkbox" className="checkbox" id="reg-log" />
+            <input
+              type="checkbox"
+              className="checkbox"
+              id="reg-log"
+              checked={isChecked}
+              onChange={handleToggle}
+            />
             <label htmlFor="reg-log"></label>
+
             <div className="card-3d-wrap">
               <div className="card-3d-wrapper">
                 <div className="card-front">

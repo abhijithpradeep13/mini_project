@@ -31,7 +31,7 @@ youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 
 
 # Define the function to search for YouTube videos
-def search_youtube(query, max_results=6):
+def search_youtube(query, max_results=9):
     request = youtube.search().list(
         q=query,
         part="snippet",

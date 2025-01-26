@@ -42,34 +42,19 @@ function Ytcardlilst({ urlembedd, url }) {
     <div class="notifications-container">
       <div class="success">
         <Ytcard videoId={urlembedd} />
-        
-            <div class="success-button-container">
-              <button
-                onClick={submithandler3}
-                className="btn"
-                disabled={isLoading}
-              >
-                Process
-              </button>
-            </div>
-         
-      </div>
-    </div>
 
-    /*
-    <div
-      className="card"
-      style={{ borderRadius: "20px", backgroundColor: "white", margin: "5px" }}
-    >
-      <Ytcard videoId={urlembedd} />
-      <div className="bottom">
-        <center>
-          <button onClick={submithandler3} className="btn" disabled={isLoading}>
+        <div class="success-button-container">
+          <button
+            onClick={submithandler3}
+            className="btn"
+            disabled={isLoading}
+            style={{ height: 35, marginBottom: "10px", marginTop: "10px" }}
+          >
             Process
           </button>
-        </center>
+        </div>
       </div>
-    </div>*/
+    </div>
   );
 }
 

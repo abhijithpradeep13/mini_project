@@ -1,9 +1,10 @@
 
 .loader {
    position: relative;
-    width: 2.5em;
-    height: 2.5em;
+    width: 4.5em;
+    height: 4.5em;
     transform: rotate(165deg);
+    z-index: 1000;
 }
 
 .loader:before,
@@ -30,42 +31,42 @@
 @keyframes before8 {
     0% {
         width: 0.5em;
-        box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
+        box-shadow: 1em -0.5em rgba(225, 20, 98, 1), -1em 0.5em rgba(111, 202, 220, 1);
     }
 
     35% {
         width: 2.5em;
-        box-shadow: 0 -0.5em rgba(225, 20, 98, 0.75), 0 0.5em rgba(111, 202, 220, 0.75);
+        box-shadow: 0 -0.5em rgba(225, 20, 98, 1), 0 0.5em rgba(111, 202, 220,1);
     }
 
     70% {
         width: 0.5em;
-        box-shadow: -1em -0.5em rgba(225, 20, 98, 0.75), 1em 0.5em rgba(111, 202, 220, 0.75);
+        box-shadow: -1em -0.5em rgba(225, 20, 98, 1), 1em 0.5em rgba(111, 202, 220, 1);
     }
 
     100% {
-        box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
+        box-shadow: 1em -0.5em rgba(225, 20, 98, 1), -1em 0.5em rgba(111, 202, 220, 1);
     }
 }
 
 @keyframes after6 {
     0% {
         height: 0.5em;
-        box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+        box-shadow: 0.5em 1em rgba(61, 184, 143,1 ), -0.5em -1em rgba(233, 169, 32, 1);
     }
 
     35% {
         height: 2.5em;
-        box-shadow: 0.5em 0 rgba(61, 184, 143, 0.75), -0.5em 0 rgba(233, 169, 32, 0.75);
+        box-shadow: 0.5em 0 rgba(61, 184, 143,1), -0.5em 0 rgba(233, 169, 32,1 );
     }
 
     70% {
         height: 0.5em;
-        box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75), -0.5em 1em rgba(233, 169, 32, 0.75);
+        box-shadow: 0.5em -1em rgba(61, 184, 143, 1), -0.5em 1em rgba(233, 169, 32,1 );
     }
 
     100% {
-        box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+        box-shadow: 0.5em 1em rgba(61, 184, 143, 1), -0.5em -1em rgba(233, 169, 32,1 );
     }
 }
 

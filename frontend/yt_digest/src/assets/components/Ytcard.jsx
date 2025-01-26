@@ -12,13 +12,17 @@ function Ytcard({ videoId }) {
       style={{
         display: "flex",
         justifyContent: "center",
-        margin: "20px",
-        borderRadius: "20",
+        margin: "10px",
+        border:"5px",
+        borderRadius: "20px",
+        
+        
       }}
     >
       <iframe
-        width="560"
-        height="315"
+        width="400"
+        height="200"
+      
         src={videoId}
         title="YouTube video player"
         frameBorder="0"
@@ -26,7 +30,7 @@ function Ytcard({ videoId }) {
         allowFullScreen
         style={{
           pointerEvents: isLoading ? "none" : "auto", // Disable iframe interaction when loading
-          opacity: isLoading ? "0.5" : "1", 
+          opacity: isLoading ? "0.5" : "1",
         }}
       ></iframe>
     </div>

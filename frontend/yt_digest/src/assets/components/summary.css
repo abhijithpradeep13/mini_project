@@ -1,0 +1,33 @@
+ .scrollable {
+     width:inherit ;
+     height: inherit;
+     max-height: 450px;
+     overflow-y: scroll;
+     border: 1px solid #ccc;
+     padding: 10px;
+ }
+
+ /* WebKit Scrollbar */
+ .scrollable::-webkit-scrollbar {
+     width: 10px;
+ }
+
+ .scrollable::-webkit-scrollbar-track {
+     background: #e4e4e4;
+     border-radius: 10px;
+ }
+
+ .scrollable::-webkit-scrollbar-thumb {
+     background: linear-gradient(45deg, #6b8e23, #3cb371);
+     border-radius: 10px;
+ }
+
+ .scrollable::-webkit-scrollbar-thumb:hover {
+     background: linear-gradient(45deg, #3cb371, #2e8b57);
+ }
+
+ /* Firefox Scrollbar */
+ .scrollable {
+     scrollbar-width: thin;
+     scrollbar-color: #3cb371 #e4e4e4;
+ }

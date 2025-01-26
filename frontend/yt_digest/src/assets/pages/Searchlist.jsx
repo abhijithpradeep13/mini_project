@@ -41,9 +41,10 @@ function Searchlist() {
             left: "0",
             width: "100%",
             height: "100%",
-            opacity:"0.5",
-          //  backgroundColor: "rgba(255, 255, 255, 0.8)",  Semi-transparent overlay
-            zIndex: "1000",
+            opacity: "0.5",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+          //  backgroundColor: "rgba(255, 255, 255, 0.8)",
+            zIndex: "2",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -56,6 +57,7 @@ function Searchlist() {
         style={{
           display: "flex",
           flexWrap: "wrap",
+          justifyContent:"space-evenly",
           opacity: isLoading ? "0.5" : "1",
         }}
       >
