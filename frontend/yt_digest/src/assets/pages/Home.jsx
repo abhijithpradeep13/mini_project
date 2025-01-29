@@ -27,6 +27,9 @@ function Home() {
     setIsChecked((prevState) => !prevState);
   };
 
+
+  
+
   const navigate = useNavigate();
 
   const urlRef = useRef(null);
@@ -45,7 +48,7 @@ function Home() {
     "malayalam",
   ];
 
-  const submithandler1 = async () => {
+  const submithandler1 = async (btn) => {
     const url = urlRef.current.value;
     const lang = langRef1.current.value;
 
@@ -65,14 +68,29 @@ function Home() {
 
         try {
           setIsLoading(true); // Show loading state
-          const response = await axios.post(
-            "http://127.0.0.1:5000/api/process",
-            {
-              url,
-              lang,
-            }
-          );
-          setsummaryresult(response.data.translated_text); // Save translated text in context
+          if (btn === 1) {
+            const response = await axios.post(
+              "http://127.0.0.1:5000/api/process",
+              {
+                url,
+                lang,
+              }
+            );
+            setsummaryresult(response.data.translated_text); // Save translated text in context
+          }
+
+          if (btn === 2) {
+            const response = await axios.post(
+              "http://127.0.0.1:5000/api/process",
+              {
+                url,
+                lang,
+              }
+            );
+            setsummaryresult(response.data.translated_text); // Save translated text in context
+          }
+         
+          
           navigate("/Process"); // Navigate to /Process after receiving response
         } catch (error) {
           console.error("Error during processing:", error);
@@ -198,14 +216,28 @@ function Home() {
                         ))}
                       </datalist>
                     </div>
-
-                    <button
-                      onClick={submithandler1}
-                      className="btn"
-                      disabled={isLoading}
+                    <div
+                      className="button-container"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
                     >
-                      Process
-                    </button>
+                      <button
+                        onClick={() => submithandler1(1)}
+                        className="btn"
+                        disabled={isLoading}
+                      >
+                        Process
+                      </button>
+                      <button
+                        onClick={() => submithandler1(2)}
+                        className="btn"
+                        disabled={isLoading}
+                      >
+                        AI-Notemaking
+                      </button>
+                    </div>
                   </div>
                 </div>
 

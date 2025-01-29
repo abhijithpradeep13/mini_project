@@ -1,48 +1,42 @@
 /* From Uiverse.io by kennyotsu */
 
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
 .notifications-container {
-    width: 410px;  
-    height: auto;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-    gap: 1rem;
-    
+  width: 410px;
+  height: auto;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  gap: 1rem;
+  background-image: url("https://i.postimg.cc/4dnZCH03/background.png");
+  background-position: bottom center;
+  background-color: #1b1b1b;
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .flex {
-    display: flex;
+  display: flex;
 }
 
 .flex-shrink-0 {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
-
-.success {
-    padding: 1rem;
-    border-radius: 0.375rem;
-    background-image: url('https://i.postimg.cc/4dnZCH03/background.png');
-        background-position: bottom center;
-        background-color: #1B1B1B;
-}
-
-
-
 
 .success-button-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.875rem;
-    margin-bottom: -0.375rem;
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  
 }
 
-
-
+.notifications-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.6); 
+}
 

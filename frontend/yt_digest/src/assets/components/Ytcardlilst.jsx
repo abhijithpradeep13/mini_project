@@ -19,15 +19,34 @@ function Ytcardlilst({ urlembedd, url }) {
   const { isLoading, setIsLoading } = useContext(LoadingstateContext);
   const navigate = useNavigate();
 
-  const submithandler3 = async () => {
+  const submithandler3 = async (btn) => {
     try {
       setIsLoading(true); // Show loading state
-      const response = await axios.post("http://127.0.0.1:5000/api/process", {
-        url,
-        lang,
-      });
-      setsummaryresult(response.data.translated_text); // Save translated text in context
-      console.log(url, lang, response.data.translated_text);
+      if (btn==1) {
+         const response = await axios.post(
+           "http://127.0.0.1:5000/api/process",
+           {
+             url,
+             lang,
+           }
+         );
+         setsummaryresult(response.data.translated_text); // Save translated text in context
+
+         console.log(url, lang, response.data.translated_text);
+      } if (btn == 2) {
+        const response = await axios.post(
+           "http://127.0.0.1:5000/api/process",
+           {
+             url,
+             lang,
+           }
+         );
+         setsummaryresult(response.data.translated_text); // Save translated text in context
+
+         console.log(url, lang, response.data.translated_text);
+        
+      }
+     
       setyturl(urlembedd);
       navigate("/Process"); // Navigate to /Process after receiving response
     } catch (error) {
@@ -40,19 +59,25 @@ function Ytcardlilst({ urlembedd, url }) {
 
   return (
     <div class="notifications-container">
-      <div class="success">
-        <Ytcard videoId={urlembedd} />
+      <Ytcard videoId={urlembedd} />
 
-        <div class="success-button-container">
-          <button
-            onClick={submithandler3}
-            className="btn"
-            disabled={isLoading}
-            style={{ height: 35, marginBottom: "10px", marginTop: "10px" }}
-          >
-            Process
-          </button>
-        </div>
+      <div class="success-button-container">
+        <button
+          onClick={() => submithandler3(1)}
+          className="btn"
+          disabled={isLoading}
+          style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
+        >
+          Process
+        </button>
+        <button
+          onClick={() => submithandler3(2)}
+          className="btn"
+          disabled={isLoading}
+          style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
+        >
+          AI-Notemaking
+        </button>
       </div>
     </div>
   );

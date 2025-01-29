@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify,render_template, send_file
+from flask import Flask, request, jsonify,session 
+from google import genai
 from flask_cors import CORS
 import os
 import yt_dlp
@@ -17,12 +18,16 @@ model = whisper.load_model("base")
 translator = Translator()
 
 # Summarization model setup
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+#summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+
+client = genai.Client(api_key="AIzaSyAW01ornPnGix5--uXpMreboybWpcqCP8M")
 
 
 
 app = Flask(__name__)
 CORS(app)
+
+
 
 # YouTube API credentials
 YOUTUBE_API_KEY = 'AIzaSyARvhH0rIG4XPkZ2hsENx6cwMijkxuEvMA'  # Replace with your API key
@@ -88,8 +93,13 @@ def translate_text(text, target_language):
 
 def summarize_text(text):
     # Generate the summary
-    summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
-    return summary[0]['summary_text']
+    #summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
+    #return summary[0]['summary_text']
+    response = client.models.generate_content(
+    model='gemini-2.0-flash-exp',
+    contents=f"Summarize the following text:\n\n{text}"
+    )
+    return response.text
 
 def process_and_summarize_text(text_path, output_path):
     try:
@@ -171,11 +181,15 @@ def process():
     translated_text = translate_text(summarized_text, target_language)
     if "An error occurred" in translated_text:
         return jsonify({'message': translated_text})
+    
+    
 
     # Store the translated text in a new file
     translated_file_path = os.path.join(output_path, f"{os.path.basename(summarized_file_path)}_translated.txt")
     with open(translated_file_path, "w", encoding="utf-8") as f:
         f.write(translated_text)
+        
+      
 
     return jsonify({
         'message': "Audio downloaded, transcribed, summarized, and translated successfully.",
@@ -185,16 +199,6 @@ def process():
          'translated_text': translated_text,
         
     }),201
-
-@app.route('/download', methods=['GET'])
-def download():
-    file_path = request.args.get('path')
-    if file_path and os.path.exists(file_path):
-        return send_file(file_path, as_attachment=True)
-    return jsonify({'message': 'File not found'})
-
-   
-
 
 
 

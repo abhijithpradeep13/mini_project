@@ -1,14 +1,33 @@
-import "./process.css"
+import "./process.css";
 import React from "react";
 import Ytcard from "../components/ytcard";
 import Summary from "../components/Summary";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UrlContext, SummaryresultContext } from "../dbstack/context";
-
 
 function Process() {
   const { yturl, setyturl } = useContext(UrlContext);
-const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
+  const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
+
+  // Save ytembed to localStorage whenever it changes
+  useEffect(() => {
+    if (yturl && yturl.length > 0) {
+      localStorage.setItem("ytembed", JSON.stringify(yturl));
+      localStorage.setItem("summary-stg", JSON.stringify(summaryresult));
+    }
+  }, [yturl, summaryresult]);
+
+  useEffect(() => {
+    const savedResults1 = localStorage.getItem("ytembed");
+    const savedResults2 = localStorage.getItem("summary-stg");
+    if (savedResults1) {
+      setyturl(JSON.parse(savedResults1));
+    }
+    if (savedResults2) {
+      setsummaryresult(JSON.parse(savedResults2));
+    }
+  }, [setyturl, setsummaryresult]);
+
   return (
     <div
       className="container"
@@ -44,7 +63,7 @@ const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
           margin: "25px",
           padding: "10px",
           borderRadius: "15px",
-          marginRight:"15px"
+          marginRight: "15px",
         }}
       >
         <div
@@ -55,7 +74,9 @@ const imageUrl = "https://i.postimg.cc/4dnZCH03/background.png";
             padding: "20px",
             border: "5px black",
             borderRadius: "5px black",
-            maxHeight: "550px",
+            maxHeight: "450px",
+            minWidth: "708px",
+            minHeight: "450px",
           }}
         >
           <Summary />

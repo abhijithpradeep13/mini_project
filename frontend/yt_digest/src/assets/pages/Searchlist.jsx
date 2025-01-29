@@ -5,8 +5,24 @@ import { useContext } from "react";
 import Loading from "./Loading";
 
 function Searchlist() {
-  const { searchresult } = useContext(searchresultContext);
+  const { searchresult, setsearchresult } = useContext(searchresultContext);
   const { isLoading } = useContext(LoadingstateContext);
+  // Save search results to localStorage whenever it changes
+  useEffect(() => {
+    if (searchresult && searchresult.length > 0) {
+      localStorage.setItem("searchResults", JSON.stringify(searchresult));
+      console.log(JSON.stringify(searchresult));
+      
+    }
+  }, [searchresult]);
+
+  useEffect(() => {
+    const savedResults = localStorage.getItem("searchResults");
+    if (savedResults) {
+      console.log(JSON.parse(savedResults));
+      setsearchresult(JSON.parse(savedResults));
+    }
+  }, [setsearchresult]);
 
   // Prevent scrolling when loading
   useEffect(() => {
@@ -32,7 +48,7 @@ function Searchlist() {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", paddingTop: "40px" }}>
       {isLoading && (
         <div
           style={{
@@ -43,7 +59,6 @@ function Searchlist() {
             height: "100%",
             opacity: "0.5",
             backgroundColor: "rgba(0, 0, 0, 0.7)",
-          //  backgroundColor: "rgba(255, 255, 255, 0.8)",
             zIndex: "2",
             display: "flex",
             alignItems: "center",
@@ -57,7 +72,7 @@ function Searchlist() {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent:"space-evenly",
+          justifyContent: "space-evenly",
           opacity: isLoading ? "0.5" : "1",
         }}
       >

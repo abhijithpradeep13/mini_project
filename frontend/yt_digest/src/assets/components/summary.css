@@ -1,10 +1,11 @@
  .scrollable {
-     width:inherit ;
+     width: inherit;
      height: inherit;
-     max-height: 450px;
+     max-height: 400px;
      overflow-y: scroll;
      border: 1px solid #ccc;
      padding: 10px;
+ 
  }
 
  /* WebKit Scrollbar */
@@ -31,3 +32,16 @@
      scrollbar-width: thin;
      scrollbar-color: #3cb371 #e4e4e4;
  }
+
+.typing-effect {
+  font-size: 15px;
+  font-family: "Courier New", monospace;
+ line-height: 1.8;
+
+  animation: typewriter 4s steps(40) 1s 1 normal both; /* Adjust duration and steps */
+  
+}
+
+
+
+ 
