@@ -1,16 +1,25 @@
-import React from 'react'
-import { useContext,useEffect,useState } from "react";
-import {  SummaryresultContext } from "../dbstack/context";
-import "./summary.css"
-import Loading from '../pages/Loading';
-
+import React from "react";
+import { useContext, useEffect, useState } from "react";
+import { SummaryresultContext } from "../dbstack/context";
+import { Typewriter } from "react-simple-typewriter";
+import "./summary.css";
 
 
 function Summary() {
   const { summaryresult } = useContext(SummaryresultContext);
-   
-  
-  return <p className="scrollable typing-effect  ">{summaryresult} </p>;
+
+  return (
+    <div className="scrollable typing-effect ">
+      <Typewriter
+        words={[summaryresult]}
+        cursor
+        deleteSpeed={0}
+        cursorStyle="_"
+        typeSpeed={40}
+      />
+     
+    </div>
+  );
 }
 
-export default Summary
+export default Summary;
