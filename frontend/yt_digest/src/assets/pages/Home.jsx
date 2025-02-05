@@ -131,26 +131,28 @@ function Home() {
   return (
     <>
       <div
-        className="right"
+        className="right-section"
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           opacity: isLoading ? "0.5" : "1",
           maxWidth: "100%",
+          paddingTop: "80px",
         }}
       >
         <div className="form">
           <div className="text-center">
-            <h6>
+            <h6 style={{ height: "35px" }}>
               <span
                 className="url"
                 style={{
                   color: isChecked ? "white" : "crimson",
                   padding: "10px",
                   marginRight: "10px",
-                  transform: isChecked ? "scale(1)" : "scale(2)",
+                    transform: `scale(${isChecked ? 1 : 5})`,
                   transition: "all 0.5s ease",
+                  fontSize: "20px",
                 }}
               >
                 URL
@@ -162,6 +164,7 @@ function Home() {
                   marginLeft: "10px",
                   transform: isChecked ? "scale(2)" : "scale(1)",
                   transition: "all 0.5s ease",
+                  fontSize: "20px",
                 }}
               >
                 SEARCH
