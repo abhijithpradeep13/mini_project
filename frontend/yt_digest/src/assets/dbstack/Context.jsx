@@ -49,9 +49,12 @@ export const LangContext = ({ children }) => {
 
 export const LoadingContext = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
+   const [isInnerChecked, setIsInnerChecked] = useState(false);
 
   return (
-    <LoadingstateContext.Provider value={{ isLoading, setIsLoading }}>
+    <LoadingstateContext.Provider
+      value={{ isLoading, setIsLoading, isInnerChecked, setIsInnerChecked }}
+    >
       {children}
     </LoadingstateContext.Provider>
   );

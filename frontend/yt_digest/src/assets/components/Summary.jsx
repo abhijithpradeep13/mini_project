@@ -64,16 +64,16 @@ export default Typewriter;
 
 function Summary() {
   const { summaryresult } = useContext(SummaryresultContext);
-  const[cursor,setcursor]=useState(true) 
+  const [cursor, setcursor] = useState(true) 
+  
   return (
     <div className="scrollable typing-effect ">
       <Typewriter
         words={[summaryresult]}
-        cursor={cursor}
+        cursor={false}
         deleteSpeed={0}
         cursorStyle="_"
         typeSpeed={40}
-        onLoopDone={() => setcursor(!cursor)}
         loop={1}
       />
     </div>

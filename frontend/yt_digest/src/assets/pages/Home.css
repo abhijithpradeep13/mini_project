@@ -256,6 +256,51 @@ input[type="checkbox"] {
     transform: translateX(44px) rotate(-270deg);
 }
 
+
+
+/*
+for button checkbox
+*/
+
+.checkboxbutton:checked+label,
+.checkboxbutton:not(:checked)+label {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 60px;
+    height: 16px;
+    border-radius: 8px;
+    background-color: var(--mainColor);
+    padding: 0;
+    margin: 10px auto;
+    cursor: pointer;
+}
+
+.checkboxbutton:checked+label::before,
+.checkboxbutton:not(:checked)+label::before {
+    position: absolute;
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--mainColor);
+    background-color: var(--white);
+    font-family: 'Material Icons';
+    content: '\f1e2';
+    z-index: 20;
+    top: -10px;
+    left: -10px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 24px;
+    transition: all .5s ease;
+}
+
+.checkboxbutton:checked+label::before {
+    transform: translateX(44px) rotate(-270deg);
+}
+
+
 .link {
     color: var(--whiteSmoke);
     margin-top: 20px;

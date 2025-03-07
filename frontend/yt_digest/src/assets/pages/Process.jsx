@@ -1,13 +1,27 @@
 import "./process.css";
+import "./Home.css";
+import Loading from "./Loading";
 import React from "react";
 import Ytcard from "../components/ytcard";
 import Summary from "../components/Summary";
 import { useContext, useEffect } from "react";
-import { UrlContext, SummaryresultContext } from "../dbstack/context";
+import {
+  UrlContext,
+  SummaryresultContext,
+  LoadingstateContext,
+} from "../dbstack/context";
+import { useRef } from "react";
+import axios from "axios";
+
+
 
 function Process() {
   const { yturl, setyturl } = useContext(UrlContext);
   const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
+  const { isInnerChecked ,isLoading, setIsLoading,} =
+      useContext(LoadingstateContext);
+
+  const promptref = useRef(null);
 
   // Save ytembed to localStorage whenever it changes
   useEffect(() => {
@@ -28,7 +42,36 @@ function Process() {
     }
   }, [setyturl, setsummaryresult]);
 
+
+  const submitprompt = async () => {
+    const prompt = promptref.current.value; // Extract the value
+   
+    
+    setIsLoading(true); // Show loading state
+
+    try {
+      setIsLoading(true); // Show loading state
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/notemaking",
+        {
+          prompt,
+        }
+      );
+     setsummaryresult(response.data.gentext);
+     
+    } catch (error) {
+      console.error("Error during processing:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading state
+    }
+  };
+{
+  isLoading && <Loading />;
+}
+
   return (
+
     <div
       className="container"
       style={{
@@ -43,13 +86,35 @@ function Process() {
         className="left"
         style={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          justifyContent: "space-evenly",
           alignItems: "center",
+          height: "100%",
         }}
       >
         <div className="card1">
           <Ytcard videoId={yturl} />
         </div>
+        {isInnerChecked && (
+          <div>
+            <input
+              type="text"
+              className="form-style"
+              placeholder="Enter Your Promt Here......."
+              id="prompt"
+              autoComplete="off"
+              ref={promptref}
+              style={{
+                paddingLeft: "10px",
+                height: "70px",
+                width: "400px",
+              }}
+            />
+            <button className="btn" onClick={()=>{submitprompt()}}>
+              
+            </button>
+          </div>
+        )}
       </div>
       <div
         className="right-container"

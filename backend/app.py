@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify,session 
 from google import genai
 from flask_cors import CORS
@@ -5,10 +6,11 @@ import os
 import yt_dlp
 from googleapiclient.discovery import build
 
+
 import whisper
 from googletrans import Translator
 
-from transformers import pipeline
+from transformers import pipeline;
 
 
 
@@ -20,20 +22,24 @@ translator = Translator()
 # Summarization model setup
 #summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-client = genai.Client(api_key="AIzaSyAW01ornPnGix5--uXpMreboybWpcqCP8M")
-
+# client = genai.Client(api_key="AIzaSyAW01ornPnGix5--uXpMreboybWpcqCP8M")
+client = genai.Client(api_key="AIzaSyAuz0BcyZ7EuxfhJrQAW_PEUB1W7hGvKW4")  
 
 
 app = Flask(__name__)
 CORS(app)
 
 
+app.secret_key = "your_secret_key"  # Needed for session storage
+
 
 # YouTube API credentials
 YOUTUBE_API_KEY = 'AIzaSyARvhH0rIG4XPkZ2hsENx6cwMijkxuEvMA'  # Replace with your API key
 youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 
+global_summarized_text = ""
 
+global_summarized_file_path=""
 
 # Define the function to search for YouTube videos
 def search_youtube(query, max_results=9):
@@ -95,11 +101,20 @@ def summarize_text(text):
     # Generate the summary
     #summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
     #return summary[0]['summary_text']
-    response = client.models.generate_content(
-    model='gemini-2.0-flash-exp',
-    contents=f"Summarize the following text:\n\n{text}"
-    )
-    return response.text
+    
+    try:
+        response = client.models.generate_content(
+        model='gemini-2.0-flash-exp',
+        contents=f"Summarize the following text:\n\n{text}"
+        )
+        # Ensure the response is correctly extracted
+        if hasattr(response, 'text'):
+            return response.text
+        else:
+            return "No summary generated."
+    
+    except Exception as e:
+        return f"An error occurred during summarization: {e}"
 
 def process_and_summarize_text(text_path, output_path):
     try:
@@ -109,12 +124,18 @@ def process_and_summarize_text(text_path, output_path):
         
         # Summarize the extracted text
         summarized_text = summarize_text(extracted_text)
+        global global_summarized_text  # Declare global variable
+        global_summarized_text = summarized_text  # Store value globally
+
+        print(summarized_text)
         
         # Store the summarized text in a new file
         summarized_file_path = os.path.join(output_path, f"summary_{os.path.basename(text_path)}")
         with open(summarized_file_path, "w", encoding="utf-8") as summary_file:
             summary_file.write(summarized_text)
-        
+        global global_summarized_file_path  # Declare global variable
+        global_summarized_file_path = summarized_file_path  # Store value globally
+
         return summarized_file_path, summarized_text
     
     except Exception as e:
@@ -197,6 +218,42 @@ def process():
         'summarized_path': summarized_file_path,
         'translated_path': translated_file_path,
          'translated_text': translated_text,
+         'speech_text': transcription_text,
+        
+    }),201
+
+
+@app.route('/api/notemaking', methods=['POST'])
+def notemaking():
+    prompt= request.json.get('prompt')
+    output_path = request.json.get('path', 'C:\coding')
+    global global_summarized_text  # Declare global variable
+    summarized_text = global_summarized_text    # Store value globally
+
+    global global_summarized_file_path  # Declare global variable
+    summarized_file_path  = global_summarized_file_path   # Store value globally
+
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    print(summarized_text)
+    response2 = client.models.generate_content(
+        model='gemini-2.0-flash-exp',
+        contents=f"{prompt}\n\n{summarized_text}"
+    )
+    aigentext=response2.text
+    print(aigentext)
+
+    # Store the translated text in a new file
+    aigenerated_file_path = os.path.join(output_path, f"{os.path.basename(summarized_file_path)}_aigenerated.txt")
+    with open(aigenerated_file_path, "w", encoding="utf-8") as f:
+        f.write(aigentext)
+        
+   
+
+    return jsonify({
+        
+         'gentext': aigentext,
         
     }),201
 

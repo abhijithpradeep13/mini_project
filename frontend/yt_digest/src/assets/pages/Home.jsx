@@ -18,13 +18,20 @@ function Home() {
   const { searchresult, setsearchresult } = useContext(searchresultContext);
   const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
   const { lang, setlang } = useContext(LangresultContext);
+   
 
-  const { isLoading, setIsLoading } = useContext(LoadingstateContext);
+  const { isLoading, setIsLoading, isInnerChecked, setIsInnerChecked } =
+    useContext(LoadingstateContext);
 
   const [isChecked, setIsChecked] = useState(false);
+  
 
   const handleToggle = () => {
     setIsChecked((prevState) => !prevState);
+  };
+
+  const handleInnerToggle = () => {
+    setIsInnerChecked((prevState) => !prevState);
   };
 
 
@@ -50,7 +57,7 @@ function Home() {
 
   const submithandler1 = async (btn) => {
     const url = urlRef.current.value;
-    const lang = langRef1.current.value;
+    const lang = langRef1?.current?.value || "english";
 
     console.log("URL:", url);
     console.log("Language:", lang);
@@ -77,6 +84,7 @@ function Home() {
               }
             );
             setsummaryresult(response.data.translated_text); // Save translated text in context
+            console.log("summarized text :", response.data.translated_text);
           }
 
           if (btn === 2) {
@@ -84,10 +92,12 @@ function Home() {
               "http://127.0.0.1:5000/api/process",
               {
                 url,
-                lang,
+                lang
               }
             );
-            setsummaryresult(response.data.translated_text); // Save translated text in context
+            setsummaryresult(response.data.speech_text); // Save translated text in context
+            console.log("transcribed text :", response.data.speech_text);
+            
           }
          
           
@@ -150,7 +160,7 @@ function Home() {
                   color: isChecked ? "white" : "crimson",
                   padding: "10px",
                   marginRight: "10px",
-                    transform: `scale(${isChecked ? 1 : 5})`,
+                  transform: `scale(${isChecked ? 1 : 5})`,
                   transition: "all 0.5s ease",
                   fontSize: "20px",
                 }}
@@ -180,10 +190,52 @@ function Home() {
             <label htmlFor="reg-log"></label>
 
             <div className="card-3d-wrap">
+              <h6
+                style={{
+                  height: "35px",
+                  zIndex: "99",
+                }}
+              >
+                <span
+                  className="url"
+                  style={{
+                    color: isChecked ? "white" : "crimson",
+                    padding: "10px",
+                    marginRight: "10px",
+                    transform: `scale(${isChecked ? 1 : 5})`,
+                    transition: "all 0.5s ease",
+                    fontSize: "20px",
+                  }}
+                >
+                  URL
+                </span>
+                <span
+                  className="search"
+                  style={{
+                    color: isChecked ? "crimson" : "white",
+                    marginLeft: "10px",
+                    transform: isChecked ? "scale(2)" : "scale(1)",
+                    transition: "all 0.5s ease",
+                    fontSize: "20px",
+                  }}
+                >
+                  SEARCH
+                </span>
+              </h6>
+              <input
+                type="checkbox"
+                className="checkboxbutton"
+                id="checkboxbutton"
+                checked={isInnerChecked}
+                onChange={handleInnerToggle}
+              />
+              <label style={{ zIndex: 999 }} htmlFor="checkboxbutton"></label>
+
               <div className="card-3d-wrapper">
                 <div className="card-front">
                   <div className="center-wrap">
                     <h4 className="heading">YOUTUBE LINK</h4>
+
                     <div className="form-group">
                       <input
                         type="text"
@@ -198,49 +250,55 @@ function Home() {
                         link
                       </span>
                     </div>
+                    {isInnerChecked ? (
+                      <div>
+                        <button
+                          onClick={() => submithandler1(2)}
+                          className="btn"
+                          disabled={isLoading}
+                        >
+                          AI-Notemaking
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="form-group">
+                          <input
+                            type="text"
+                            className="form-style"
+                            placeholder="Target Language"
+                            list="language-options"
+                            id="language"
+                            autoComplete="off"
+                            ref={langRef1}
+                            disabled={isLoading} // Disable input when loading
+                          />
+                          <span className="material-symbols-outlined input-icon material-icons">
+                            g_translate
+                          </span>
+                          <datalist id="language-options">
+                            {options.map((option, index) => (
+                              <option key={index} value={option} />
+                            ))}
+                          </datalist>
+                        </div>
+                        <button
+                          onClick={() => submithandler1(1)}
+                          className="btn"
+                          disabled={isLoading}
+                        >
+                          Process
+                        </button>
+                      </div>
+                    )}
 
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-style"
-                        placeholder="Target Language"
-                        list="language-options"
-                        id="language"
-                        autoComplete="off"
-                        ref={langRef1}
-                        disabled={isLoading} // Disable input when loading
-                      />
-                      <span className="material-symbols-outlined input-icon material-icons">
-                        g_translate
-                      </span>
-                      <datalist id="language-options">
-                        {options.map((option, index) => (
-                          <option key={index} value={option} />
-                        ))}
-                      </datalist>
-                    </div>
                     <div
                       className="button-container"
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                       }}
-                    >
-                      <button
-                        onClick={() => submithandler1(1)}
-                        className="btn"
-                        disabled={isLoading}
-                      >
-                        Process
-                      </button>
-                      <button
-                        onClick={() => submithandler1(2)}
-                        className="btn"
-                        disabled={isLoading}
-                      >
-                        AI-Notemaking
-                      </button>
-                    </div>
+                    ></div>
                   </div>
                 </div>
 
