@@ -16,7 +16,8 @@ import Loading from "./Loading";
 function Home() {
   const { yturl, setyturl } = useContext(UrlContext);
   const { searchresult, setsearchresult } = useContext(searchresultContext);
-  const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
+  const { summaryresult, setsummaryresult, summarypath, setsummarypath } =
+    useContext(SummaryresultContext);
   const { lang, setlang } = useContext(LangresultContext);
    
 
@@ -84,19 +85,21 @@ function Home() {
               }
             );
             setsummaryresult(response.data.translated_text); // Save translated text in context
+            setsummarypath(response.data.translated_path);
             console.log("summarized text :", response.data.translated_text);
+            console.log("translated_path :", response.data.translated_path);
           }
 
           if (btn === 2) {
             const response = await axios.post(
-              "http://127.0.0.1:5000/api/process",
+              "http://127.0.0.1:5000/api/notemaking",
               {
                 url,
-                lang
+                lang,
               }
             );
-            setsummaryresult(response.data.speech_text); // Save translated text in context
-            console.log("transcribed text :", response.data.speech_text);
+            setsummaryresult(response.data.gentext);
+            
             
           }
          

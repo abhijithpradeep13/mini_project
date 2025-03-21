@@ -1,4 +1,4 @@
-/* From Uiverse.io by kennyotsu */
+/* 
 
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
@@ -38,5 +38,45 @@
 .notifications-container:hover {
   transform: scale(1.05);
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.6); 
+}
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+.notifications-container {
+  width: 410px;
+  height: auto;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  gap: 1rem;
+  background-image: url("https://i.postimg.cc/4dnZCH03/background.png");
+  background-position: bottom center;
+  background-color: #1b1b1b;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notifications-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.6);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.success-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 

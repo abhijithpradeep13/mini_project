@@ -1,5 +1,6 @@
 
 from flask import Flask, request, jsonify,session 
+
 from google import genai
 from flask_cors import CORS
 import os
@@ -24,6 +25,7 @@ translator = Translator()
 
 # client = genai.Client(api_key="AIzaSyAW01ornPnGix5--uXpMreboybWpcqCP8M")
 client = genai.Client(api_key="AIzaSyAuz0BcyZ7EuxfhJrQAW_PEUB1W7hGvKW4")  
+
 
 
 app = Flask(__name__)
@@ -81,7 +83,9 @@ def transcribe_audio(audio_path, output_path):
         result = model.transcribe(audio_path)
         print("errcheck1")
         text_file_path = os.path.join(output_path, f"{os.path.basename(audio_path)}.txt")
-        print("errcheck2")
+        print(result["text"])
+        global global_summarized_text  # Declare global variable
+        global_summarized_text = result["text"]  # Store value globally
         with open(text_file_path, "w", encoding="utf-8") as f:
             f.write(result["text"])
            
@@ -91,11 +95,25 @@ def transcribe_audio(audio_path, output_path):
         return None, f"An error occurred during transcription: {e}"
 
 def translate_text(text, target_language):
+    # try:
+    #     translated = translator.translate(text, dest=target_language)
+    #     return translated.text
+    # except Exception as e:
+    #     return f"An error occurred during translation: {e}"
     try:
-        translated = translator.translate(text, dest=target_language)
-        return translated.text
+         response = client.models.generate_content(
+         model='gemini-2.0-flash-exp',
+         contents=f"Translate the following text to {target_language} and return response in the specified language only: {text}"
+        )
+        #  Ensure the response is correctly extracted
+         if hasattr(response, 'text'):
+            return response.text
+         else:
+            return "No summary generated."
+    
     except Exception as e:
         return f"An error occurred during translation: {e}"
+
 
 def summarize_text(text):
     # Generate the summary
@@ -103,15 +121,17 @@ def summarize_text(text):
     #return summary[0]['summary_text']
     
     try:
-        response = client.models.generate_content(
-        model='gemini-2.0-flash-exp',
-        contents=f"Summarize the following text:\n\n{text}"
+         response = client.models.generate_content(
+         model='gemini-2.0-flash-exp',
+         contents=f"Summarize the following text:\n\n{text}"
         )
-        # Ensure the response is correctly extracted
-        if hasattr(response, 'text'):
+        #  Ensure the response is correctly extracted
+         if hasattr(response, 'text'):
             return response.text
-        else:
+         else:
             return "No summary generated."
+
+    
     
     except Exception as e:
         return f"An error occurred during summarization: {e}"
@@ -124,8 +144,7 @@ def process_and_summarize_text(text_path, output_path):
         
         # Summarize the extracted text
         summarized_text = summarize_text(extracted_text)
-        global global_summarized_text  # Declare global variable
-        global_summarized_text = summarized_text  # Store value globally
+        
 
         print(summarized_text)
         
@@ -133,8 +152,7 @@ def process_and_summarize_text(text_path, output_path):
         summarized_file_path = os.path.join(output_path, f"summary_{os.path.basename(text_path)}")
         with open(summarized_file_path, "w", encoding="utf-8") as summary_file:
             summary_file.write(summarized_text)
-        global global_summarized_file_path  # Declare global variable
-        global_summarized_file_path = summarized_file_path  # Store value globally
+        
 
         return summarized_file_path, summarized_text
     
@@ -227,8 +245,38 @@ def process():
 def notemaking():
     prompt= request.json.get('prompt')
     output_path = request.json.get('path', 'C:\coding')
+    video_url = request.json.get('url')
+    print(1,video_url)
+    user_language = request.json.get('lang')
+    print(2,user_language)
+    language_mapping = {
+        "english": "en",
+        "french": "fr",
+        "spanish": "es",
+        "german": "de",
+        "chinese": "zh-cn",
+        "hindi": "hi",
+        "arabic": "ar",
+        "malayalam": "ml",
+    }
+
+    target_language = language_mapping.get(user_language, "en")
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    # Step 1: Download audio and transcribe
+    audio_path = download_audio(video_url, output_path)
+    if "An error occurred" in audio_path:
+        return jsonify({'message': audio_path})
+    
+    print(3,video_url)
+
+    transcription_path, transcription_text = transcribe_audio(audio_path, output_path)
+    if transcription_path is None:
+        return jsonify({'message': transcription_text})
     global global_summarized_text  # Declare global variable
-    summarized_text = global_summarized_text    # Store value globally
+    global_summarized_text = transcription_text    # Store value globally
 
     global global_summarized_file_path  # Declare global variable
     summarized_file_path  = global_summarized_file_path   # Store value globally
@@ -236,13 +284,20 @@ def notemaking():
 
     if not os.path.exists(output_path):
         os.makedirs(output_path)
-    print(summarized_text)
+    print(global_summarized_text)
     response2 = client.models.generate_content(
         model='gemini-2.0-flash-exp',
-        contents=f"{prompt}\n\n{summarized_text}"
+        contents=f"Identify the subject of the given content (e.g., Biology, Mathematics, Physics, Chemistry, etc.) and generate structured, point-wise notes by highlighting key concepts, definitions, and important points, converting text-based formulas into properly formatted mathematical expressions, and including relevant diagrams, equations, or reactions where necessary.\n\n{transcription_text}"
+       
     )
+
+    formatted_text = response2.text.replace("\n", "<br>")  # Convert newlines to HTML <br>
+    formatted_text = formatted_text.replace("*   ", "&nbsp;&nbsp;&nbsp;&nbsp;* ")  # Preserve bullet points and indentation
     aigentext=response2.text
     print(aigentext)
+
+    
+    print(formatted_text)
 
     # Store the translated text in a new file
     aigenerated_file_path = os.path.join(output_path, f"{os.path.basename(summarized_file_path)}_aigenerated.txt")
@@ -253,7 +308,68 @@ def notemaking():
 
     return jsonify({
         
-         'gentext': aigentext,
+         'gentext': formatted_text,
+         'aigenerated_file_path':aigenerated_file_path
+        
+    }),201
+
+
+@app.route('/api/quiz', methods=['POST'])
+def quiz():
+    
+    output_path = request.json.get('path', 'C:\coding')
+    video_url = request.json.get('yturl')
+    print(1,video_url)
+    
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    # Step 1: Download audio and transcribe
+    audio_path = download_audio(video_url, output_path)
+    if "An error occurred" in audio_path:
+        return jsonify({'message': audio_path})
+    
+    print(3,video_url)
+
+    transcription_path, transcription_text = transcribe_audio(audio_path, output_path)
+    if transcription_path is None:
+        return jsonify({'message': transcription_text})
+    global global_summarized_text  # Declare global variable
+    quizinput = global_summarized_text    # Store value globally
+    print("quizinput : "  ,quizinput)
+
+    global global_summarized_file_path  # Declare global variable
+    summarized_file_path = global_summarized_file_path
+
+   
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    print(quizinput)
+    response2 = client.models.generate_content(
+        model='gemini-2.0-flash-exp',
+        contents=f"prepare multiple choice questions from the given content and return the mcqs  as an array of objects where object keys and their datatypes are id:integer,question:string,options:array of strings,correctAnswer:string .make sure you return only the array of objects and no other text \n\n{quizinput}"
+    )
+    
+    
+    aigentext=response2.text
+    print("quiz:",aigentext)
+
+    
+    print(aigentext)
+
+    # Store the translated text in a new file
+    aigenerated_file_path = os.path.join(output_path, f"{os.path.basename(summarized_file_path)}_quiz.txt")
+    with open(aigenerated_file_path, "w", encoding="utf-8") as f:
+        f.write(aigentext)
+        
+   
+
+    return jsonify({
+        
+         'quizresponse': aigentext,
+         'aigenerated_file_path':aigenerated_file_path
         
     }),201
 

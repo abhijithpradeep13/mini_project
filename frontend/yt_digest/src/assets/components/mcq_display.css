@@ -1,0 +1,156 @@
+/* MCQ Card Container */
+.mcq-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Bar */
+.progress-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.question-counter {
+  font-size: 14px;
+  color: #666;
+}
+
+.score-display {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Question Section */
+.question-container {
+  margin-bottom: 24px;
+}
+
+.question-text {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Options Section */
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.option-item {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.option-item:hover {
+  background-color: #f5f5f5;
+}
+
+.option-selected {
+  background-color: #e3f2fd;
+}
+
+.option-correct {
+  background-color: #e8f5e9;
+}
+
+.option-incorrect {
+  background-color: #ffebee;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+}
+
+/* Radio Button Styling */
+.radio-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.radio-selected {
+  border-color: #2196f3;
+}
+
+.radio-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #2196f3;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.previous-button {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.previous-button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.next-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.next-button:hover:not(:disabled) {
+  background-color: #1976d2;
+}
+
+.submit-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #388e3c;
+}
+
+.reset-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.reset-button:hover {
+  background-color: #1976d2;
+}

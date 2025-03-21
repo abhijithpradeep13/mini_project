@@ -41,9 +41,8 @@ function Ytcardlilst({ urlembedd, url }) {
              lang,
            }
          );
-         setsummaryresult(response.data.translated_text); // Save translated text in context
-
-         console.log(url, lang, response.data.translated_text);
+         setsummaryresult(response.data.speech_text); // Save translated text in context
+         console.log("transcribed text :", response.data.speech_text);
         
       }
      
@@ -58,10 +57,10 @@ function Ytcardlilst({ urlembedd, url }) {
   };
 
   return (
-    <div class="notifications-container">
+    <div className="notifications-container">
       <Ytcard videoId={urlembedd} />
 
-      <div class="success-button-container">
+      <div className="success-button-container">
         <button
           onClick={() => submithandler3(1)}
           className="btn"

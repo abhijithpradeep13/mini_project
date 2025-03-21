@@ -1,0 +1,43 @@
+.multiple-choice-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 320px;
+  background-color: white;
+}
+
+.multiple-choice-question {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.multiple-choice-options {
+  margin-top: 8px;
+}
+
+.multiple-choice-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.multiple-choice-checkbox {
+  accent-color: #3b82f6; /* Blue color */
+}
+
+.multiple-choice-button {
+  margin-top: 16px;
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.multiple-choice-button:hover {
+  background-color: #2563eb;
+}
