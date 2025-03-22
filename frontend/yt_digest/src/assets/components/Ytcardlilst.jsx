@@ -13,10 +13,12 @@ import "./Ytcardlist.css";
 
 function Ytcardlilst({ urlembedd, url }) {
   const { yturl, setyturl } = useContext(UrlContext);
-  const { summaryresult, setsummaryresult } = useContext(SummaryresultContext);
+  const { summaryresult, setsummaryresult, settranscriptionresult } =
+    useContext(SummaryresultContext);
   const { lang, setlang } = useContext(LangresultContext);
 
-  const { isLoading, setIsLoading } = useContext(LoadingstateContext);
+  const { isLoading, setIsLoading, isInnerChecked, isChecked } =
+    useContext(LoadingstateContext);
   const navigate = useNavigate();
 
   const submithandler3 = async (btn) => {
@@ -34,15 +36,16 @@ function Ytcardlilst({ urlembedd, url }) {
 
          console.log(url, lang, response.data.translated_text);
       } if (btn == 2) {
-        const response = await axios.post(
-           "http://127.0.0.1:5000/api/process",
+         const response = await axios.post(
+           "http://127.0.0.1:5000/api/notemaking",
            {
              url,
              lang,
            }
          );
-         setsummaryresult(response.data.speech_text); // Save translated text in context
-         console.log("transcribed text :", response.data.speech_text);
+        setsummaryresult(response.data.gentext);
+        settranscriptionresult(response.data.transtext);
+         console.log("ai text :", response.data.gentext);
         
       }
      
@@ -61,22 +64,25 @@ function Ytcardlilst({ urlembedd, url }) {
       <Ytcard videoId={urlembedd} />
 
       <div className="success-button-container">
-        <button
-          onClick={() => submithandler3(1)}
-          className="btn"
-          disabled={isLoading}
-          style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
-        >
-          Process
-        </button>
-        <button
-          onClick={() => submithandler3(2)}
-          className="btn"
-          disabled={isLoading}
-          style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
-        >
-          AI-Notemaking
-        </button>
+        {!isInnerChecked ? (
+          <button
+            onClick={() => submithandler3(1)}
+            className="btn"
+            disabled={isLoading}
+            style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
+          >
+            Process
+          </button>
+        ) : (
+          <button
+            onClick={() => submithandler3(2)}
+            className="btn"
+            disabled={isLoading}
+            style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
+          >
+            AI-Notemaking
+          </button>
+        )}
       </div>
     </div>
   );

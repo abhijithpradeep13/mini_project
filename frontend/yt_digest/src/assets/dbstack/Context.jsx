@@ -78,17 +78,38 @@ export const AppProvider = ({ children }) => {
   const [yturl, setyturl] = useState("");
   const [searchresult, setsearchresult] = useState([]);
   const [summaryresult, setsummaryresult] = useState("");
+   const [transcriptionresult, settranscriptionresult] = useState("");
   const [summarypath, setsummarypath] = useState(null);
   const [lang, setlang] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isInnerChecked, setIsInnerChecked] = useState(true);
+  const [isInnerChecked, setIsInnerChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  
 
   return (
     <UrlContext.Provider value={{ yturl, setyturl }}>
       <searchresultContext.Provider value={{ searchresult, setsearchresult }}>
-        <SummaryresultContext.Provider value={{ summaryresult, setsummaryresult, summarypath, setsummarypath }}>
+        <SummaryresultContext.Provider
+          value={{
+            summaryresult,
+            setsummaryresult,
+            summarypath,
+            setsummarypath,
+            transcriptionresult,
+            settranscriptionresult,
+          }}
+        >
           <LangresultContext.Provider value={{ lang, setlang }}>
-            <LoadingstateContext.Provider value={{ isLoading, setIsLoading, isInnerChecked, setIsInnerChecked }}>
+            <LoadingstateContext.Provider
+              value={{
+                isLoading,
+                setIsLoading,
+                isInnerChecked,
+                setIsInnerChecked,
+                isChecked,
+                setIsChecked,
+              }}
+            >
               {children}
             </LoadingstateContext.Provider>
           </LangresultContext.Provider>

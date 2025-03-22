@@ -16,15 +16,27 @@ import Loading from "./Loading";
 function Home() {
   const { yturl, setyturl } = useContext(UrlContext);
   const { searchresult, setsearchresult } = useContext(searchresultContext);
-  const { summaryresult, setsummaryresult, summarypath, setsummarypath } =
-    useContext(SummaryresultContext);
+  const {
+    summaryresult,
+    setsummaryresult,
+    summarypath,
+    setsummarypath,
+    settranscriptionresult,
+  } = useContext(SummaryresultContext);
   const { lang, setlang } = useContext(LangresultContext);
    
 
-  const { isLoading, setIsLoading, isInnerChecked, setIsInnerChecked } =
-    useContext(LoadingstateContext);
+  const {
+    isLoading,
+    setIsLoading,
+    isInnerChecked,
+    setIsInnerChecked,
+    isChecked,
+    setIsChecked,
+  } = useContext(LoadingstateContext);
 
-  const [isChecked, setIsChecked] = useState(false);
+  
+ 
   
 
   const handleToggle = () => {
@@ -99,6 +111,8 @@ function Home() {
               }
             );
             setsummaryresult(response.data.gentext);
+            settranscriptionresult(response.data.transtext);
+            console.log("transtext ", response.data.transtext);
             
             
           }
@@ -119,8 +133,10 @@ function Home() {
 
   const submithandler2 = async () => {
     const search = searchRef.current.value; // Extract the value
-    const lang = langRef2.current.value; // Extract the value
-    setlang(lang);
+    const lang = langRef2?.current?.value; // Extract the value
+    if (lang != undefined) {
+     setlang(lang);
+    }
     console.log("search:", search);
     console.log("Language:", lang);
     setIsLoading(true); // Show loading state
@@ -129,9 +145,9 @@ function Home() {
       setIsLoading(true); // Show loading state
       const response = await axios.post("http://127.0.0.1:5000/api/search", {
         search,
-        lang,
       });
       setsearchresult(response.data.videos);
+      console.log("api result : ", response.data.videos);
       navigate("/search");
     } catch (error) {
       console.error("Error during processing:", error);
@@ -193,50 +209,56 @@ function Home() {
             <label htmlFor="reg-log"></label>
 
             <div className="card-3d-wrap">
-              <h6
-                style={{
-                  height: "35px",
-                  zIndex: "99",
-                }}
-              >
-                <span
-                  className="url"
-                  style={{
-                    color: isChecked ? "white" : "crimson",
-                    padding: "10px",
-                    marginRight: "10px",
-                    transform: `scale(${isChecked ? 1 : 5})`,
-                    transition: "all 0.5s ease",
-                    fontSize: "20px",
-                  }}
-                >
-                  URL
-                </span>
-                <span
-                  className="search"
-                  style={{
-                    color: isChecked ? "crimson" : "white",
-                    marginLeft: "10px",
-                    transform: isChecked ? "scale(2)" : "scale(1)",
-                    transition: "all 0.5s ease",
-                    fontSize: "20px",
-                  }}
-                >
-                  SEARCH
-                </span>
-              </h6>
-              <input
-                type="checkbox"
-                className="checkboxbutton"
-                id="checkboxbutton"
-                checked={isInnerChecked}
-                onChange={handleInnerToggle}
-              />
-              <label style={{ zIndex: 999 }} htmlFor="checkboxbutton"></label>
-
               <div className="card-3d-wrapper">
+                <h6
+                  style={{
+                    height: "50px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <span
+                    className="url"
+                    style={{
+                      color: isInnerChecked ? "white" : "crimson",
+                      padding: "10px",
+                      marginRight: "10px",
+                     // transform: `scale(${isInnerChecked ? 1 : 1.1})`,
+                      transform: isChecked ? "rotateY(180deg)" : "",
+                      transition: "all 0.5s ease",
+                      fontSize: "20px",
+                      zIndex: 999,
+                    }}
+                  >
+                    SUMMARY
+                  </span>
+                  <span
+                    className="search"
+                    style={{
+                      color: isInnerChecked ? "crimson" : "white",
+                      marginLeft: "10px",
+                      //transform: isInnerChecked ? "scale(1.1)" : "scale(1)",
+                      transform: isChecked ? "rotateY(180deg)" : "",
+                      transition: "all 0.5s ease",
+                      fontSize: "20px",
+                      zIndex: 999,
+                    }}
+                  >
+                    AI-NOTE
+                  </span>
+                </h6>
+                <input
+                  type="checkbox"
+                  className="checkboxbutton"
+                  id="checkboxbutton"
+                  checked={isInnerChecked}
+                  onChange={handleInnerToggle}
+                />
+                <label style={{ zIndex: 999 }} htmlFor="checkboxbutton"></label>
+
                 <div className="card-front">
-                  <div className="center-wrap">
+                  <div className="center-wrap" style={{ paddingTop: "25px" }}>
                     <h4 className="heading">YOUTUBE LINK</h4>
 
                     <div className="form-group">
@@ -306,7 +328,7 @@ function Home() {
                 </div>
 
                 <div className="card-back">
-                  <div className="center-wrap">
+                  <div className="center-wrap" style={{ paddingTop: "25px" }}>
                     <h4 className="heading">SEARCH YOUTUBE</h4>
                     <div className="form-group">
                       <input
@@ -321,35 +343,48 @@ function Home() {
                         youtube_searched_for
                       </span>
                     </div>
+                    {isChecked && isInnerChecked ? (
+                      <div>
+                        <button
+                          onClick={submithandler2}
+                          className="btn"
+                          disabled={isLoading}
+                        >
+                          Search
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="form-group">
+                          <input
+                            type="text"
+                            className="form-style"
+                            placeholder="Target Language"
+                            list="language-options"
+                            id="language"
+                            autoComplete="off"
+                            ref={langRef2}
+                            disabled={isLoading} // Disable input when loading
+                          />
+                          <span className="material-symbols-outlined input-icon material-icons">
+                            g_translate
+                          </span>
+                          <datalist id="language-options">
+                            {options.map((option, index) => (
+                              <option key={index} value={option} />
+                            ))}
+                          </datalist>
+                        </div>
 
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-style"
-                        placeholder="Target Language"
-                        list="language-options"
-                        id="language"
-                        autoComplete="off"
-                        ref={langRef2}
-                        disabled={isLoading} // Disable input when loading
-                      />
-                      <span className="material-symbols-outlined input-icon material-icons">
-                        g_translate
-                      </span>
-                      <datalist id="language-options">
-                        {options.map((option, index) => (
-                          <option key={index} value={option} />
-                        ))}
-                      </datalist>
-                    </div>
-
-                    <button
-                      onClick={submithandler2}
-                      className="btn"
-                      disabled={isLoading}
-                    >
-                      Search
-                    </button>
+                        <button
+                          onClick={submithandler2}
+                          className="btn"
+                          disabled={isLoading}
+                        >
+                          Search
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -6,7 +6,7 @@ from flask_cors import CORS
 import os
 import yt_dlp
 from googleapiclient.discovery import build
-
+from datetime import datetime
 
 import whisper
 from googletrans import Translator
@@ -65,10 +65,12 @@ def search_youtube(query, max_results=9):
 
 def download_audio(video_url, output_path="C:\coding"):
     try:
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         ydl_opts = {
             'format': 'bestaudio/best',
-            'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
+            'outtmpl': os.path.join(output_path, f'%(title)s_{timestamp}.%(ext)s'),
         }
+        
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(video_url, download=False)
             file_name = ydl.prepare_filename(info_dict)
@@ -309,7 +311,8 @@ def notemaking():
     return jsonify({
         
          'gentext': formatted_text,
-         'aigenerated_file_path':aigenerated_file_path
+         'aigenerated_file_path':aigenerated_file_path,
+         "transtext":global_summarized_text
         
     }),201
 
@@ -318,25 +321,14 @@ def notemaking():
 def quiz():
     
     output_path = request.json.get('path', 'C:\coding')
-    video_url = request.json.get('yturl')
-    print(1,video_url)
+    transdata = request.json.get('transcriptionresult')
     
 
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    # Step 1: Download audio and transcribe
-    audio_path = download_audio(video_url, output_path)
-    if "An error occurred" in audio_path:
-        return jsonify({'message': audio_path})
     
-    print(3,video_url)
-
-    transcription_path, transcription_text = transcribe_audio(audio_path, output_path)
-    if transcription_path is None:
-        return jsonify({'message': transcription_text})
-    global global_summarized_text  # Declare global variable
-    quizinput = global_summarized_text    # Store value globally
+    quizinput = transdata    # Store value globally
     print("quizinput : "  ,quizinput)
 
     global global_summarized_file_path  # Declare global variable

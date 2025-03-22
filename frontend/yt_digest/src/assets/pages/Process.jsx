@@ -16,8 +16,14 @@ import axios from "axios";
 
 function Process() {
   const { yturl, setyturl } = useContext(UrlContext);
-  const { summaryresult, setsummaryresult, summarypath, setsummarypath } =
-    useContext(SummaryresultContext);
+  const {
+    summaryresult,
+    setsummaryresult,
+    summarypath,
+    setsummarypath,
+    transcriptionresult,
+    settranscriptionresult,
+  } = useContext(SummaryresultContext);
   const { isInnerChecked, isLoading, setIsLoading } =
     useContext(LoadingstateContext);
 
@@ -32,6 +38,10 @@ function Process() {
       localStorage.setItem("ytembed", JSON.stringify(yturl));
       localStorage.setItem("summary-stg", JSON.stringify(summaryresult));
       localStorage.setItem("path-stg", JSON.stringify(summarypath));
+      localStorage.setItem(
+        "transtext-stg",
+        JSON.stringify(transcriptionresult)
+      );
     }
 
     // Save quiz data and quiz clicked state
@@ -39,7 +49,14 @@ function Process() {
       localStorage.setItem("quiz-data", JSON.stringify(quizdata));
     }
     localStorage.setItem("quiz-clicked", JSON.stringify(quizclicked));
-  }, [yturl, summaryresult, summarypath, quizdata, quizclicked]);
+  }, [
+    yturl,
+    summaryresult,
+    summarypath,
+    quizdata,
+    quizclicked,
+    transcriptionresult,
+  ]);
 
   // Load saved data on initial render
   useEffect(() => {
@@ -48,6 +65,8 @@ function Process() {
     const savedResults3 = localStorage.getItem("path-stg");
     const savedQuizData = localStorage.getItem("quiz-data");
     const savedQuizClicked = localStorage.getItem("quiz-clicked");
+    const savedtranstextData = localStorage.getItem("transtext-stg");
+    console.log(savedtranstextData, " savedtranstextData ");
 
     if (savedResults1) {
       setyturl(JSON.parse(savedResults1));
@@ -64,7 +83,17 @@ function Process() {
     if (savedQuizClicked) {
       setquizclicked(JSON.parse(savedQuizClicked));
     }
-  }, [setyturl, setsummaryresult, setsummarypath, setquizdata, setquizclicked]);
+    if (savedtranstextData) {
+      settranscriptionresult(JSON.parse(savedtranstextData));
+    }
+  }, [
+    setyturl,
+    setsummaryresult,
+    setsummarypath,
+    setquizdata,
+    setquizclicked,
+    settranscriptionresult,
+  ]);
 
   function extractText(str, startKeyword, endKeyword) {
     const start = str.indexOf(startKeyword);
@@ -84,7 +113,7 @@ function Process() {
     try {
       console.log("Sending request with yturl:", yturl);
       const response = await axios.post("http://127.0.0.1:5000/api/quiz", {
-        yturl,
+        transcriptionresult,
       });
 
       console.log("API Response:", response.data);
@@ -165,7 +194,7 @@ function Process() {
         <div className="card1">
           <Ytcard videoId={yturl} />
         </div>
-        {isInnerChecked && (
+        {(
           <div style={{ display: "flex", gap: "10px" }}>
             <button className="btn" onClick={submitprompt}>
               {quizclicked ? "Refresh Quiz" : "Quiz"}
