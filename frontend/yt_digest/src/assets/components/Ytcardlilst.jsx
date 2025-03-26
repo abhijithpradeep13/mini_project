@@ -15,9 +15,9 @@ function Ytcardlilst({ urlembedd, url }) {
   const { yturl, setyturl } = useContext(UrlContext);
   const { summaryresult, setsummaryresult, settranscriptionresult } =
     useContext(SummaryresultContext);
-  const { lang, setlang } = useContext(LangresultContext);
+  const { lang, setlang  } = useContext(LangresultContext);
 
-  const { isLoading, setIsLoading, isInnerChecked, isChecked } =
+  const { isLoading, setIsLoading, isInnerChecked, isChecked, setquiztoggle } =
     useContext(LoadingstateContext);
   const navigate = useNavigate();
 
@@ -45,7 +45,12 @@ function Ytcardlilst({ urlembedd, url }) {
          );
         setsummaryresult(response.data.gentext);
         settranscriptionresult(response.data.transtext);
-         console.log("ai text :", response.data.gentext);
+        console.log("ai text :", response.data.gentext);
+        
+         setquiztoggle(response.data.quiztoggle);
+
+         console.log("quiztoggle ", response.data.quiztoggle);
+            
         
       }
      
@@ -71,7 +76,7 @@ function Ytcardlilst({ urlembedd, url }) {
             disabled={isLoading}
             style={{ height: "40px", marginBottom: "10px", marginTop: "0px" }}
           >
-            Process
+            Summary
           </button>
         ) : (
           <button

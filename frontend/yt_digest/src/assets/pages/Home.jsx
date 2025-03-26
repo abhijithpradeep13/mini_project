@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useRef, useContext, useState } from "react";
 import "./Home.css";
-import { useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   UrlContext,
   searchresultContext,
@@ -10,22 +9,14 @@ import {
   LangresultContext,
   LoadingstateContext,
 } from "../dbstack/context";
-import axios from "axios";
 import Loading from "./Loading";
 
 function Home() {
-  const { yturl, setyturl } = useContext(UrlContext);
-  const { searchresult, setsearchresult } = useContext(searchresultContext);
-  const {
-    summaryresult,
-    setsummaryresult,
-    summarypath,
-    setsummarypath,
-    settranscriptionresult,
-  } = useContext(SummaryresultContext);
-  const { lang, setlang } = useContext(LangresultContext);
-   
-
+  const { setyturl } = useContext(UrlContext);
+  const { setsearchresult } = useContext(searchresultContext);
+  const { setsummaryresult, setsummarypath, settranscriptionresult } =
+    useContext(SummaryresultContext);
+  const { setlang } = useContext(LangresultContext);
   const {
     isLoading,
     setIsLoading,
@@ -33,11 +24,11 @@ function Home() {
     setIsInnerChecked,
     isChecked,
     setIsChecked,
+    setquiztoggle,
   } = useContext(LoadingstateContext);
 
-  
- 
-  
+  // State for error handling
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleToggle = () => {
     setIsChecked((prevState) => !prevState);
@@ -46,9 +37,6 @@ function Home() {
   const handleInnerToggle = () => {
     setIsInnerChecked((prevState) => !prevState);
   };
-
-
-  
 
   const navigate = useNavigate();
 
@@ -68,12 +56,45 @@ function Home() {
     "malayalam",
   ];
 
-  const submithandler1 = async (btn) => {
-    const url = urlRef.current.value;
-    const lang = langRef1?.current?.value || "english";
+  // Validate YouTube URL
+  const validateYouTubeURL = (url) => {
+    const videoIdRegex =
+      /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    return videoIdRegex.test(url);
+  };
 
-    console.log("URL:", url);
-    console.log("Language:", lang);
+  // Validate Language
+  const validateLanguage = (language) => {
+    return options.includes(language.toLowerCase());
+  };
+
+  const submithandler1 = async (btn) => {
+    // Clear previous error message
+    setErrorMessage("");
+
+    const url = urlRef.current.value.trim();
+    const lang = (langRef1?.current?.value || "english").trim().toLowerCase();
+
+    // Validate URL
+    if (!url) {
+      setErrorMessage("Please enter a YouTube URL.");
+      return;
+    }
+
+    if (!validateYouTubeURL(url)) {
+      setErrorMessage(
+        "Invalid YouTube URL. Please enter a valid YouTube link."
+      );
+      return;
+    }
+
+    // Validate Language (if not Summary/AI-Note mode)
+    if (!isInnerChecked && !validateLanguage(lang)) {
+      setErrorMessage(
+        `Invalid language. Please choose from: ${options.join(", ")}.`
+      );
+      return;
+    }
 
     const videoIdRegex =
       /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -81,79 +102,79 @@ function Home() {
 
     if (match) {
       const videoId = match[1];
+      setyturl(`https://www.youtube.com/embed/${videoId}`);
 
-      if (match) {
-        const videoId = match[1];
-        setyturl(`https://www.youtube.com/embed/${videoId}`); // Set YouTube embed URL
+      try {
+        setIsLoading(true);
 
-        try {
-          setIsLoading(true); // Show loading state
-          if (btn === 1) {
-            const response = await axios.post(
-              "http://127.0.0.1:5000/api/process",
-              {
-                url,
-                lang,
-              }
-            );
-            setsummaryresult(response.data.translated_text); // Save translated text in context
-            setsummarypath(response.data.translated_path);
-            console.log("summarized text :", response.data.translated_text);
-            console.log("translated_path :", response.data.translated_path);
-          }
-
-          if (btn === 2) {
-            const response = await axios.post(
-              "http://127.0.0.1:5000/api/notemaking",
-              {
-                url,
-                lang,
-              }
-            );
-            setsummaryresult(response.data.gentext);
-            settranscriptionresult(response.data.transtext);
-            console.log("transtext ", response.data.transtext);
-            
-            
-          }
-         
-          
-          navigate("/Process"); // Navigate to /Process after receiving response
-        } catch (error) {
-          console.error("Error during processing:", error);
-          alert("An error occurred. Please try again.");
-        } finally {
-          setIsLoading(false); // Hide loading state
+        if (btn === 1) {
+          // Translation mode
+          const response = await axios.post(
+            "http://127.0.0.1:5000/api/process",
+            { url, lang }
+          );
+          setsummaryresult(response.data.translated_text);
+          setsummarypath(response.data.translated_path);
         }
-      } else {
-        alert("Please enter a valid YouTube URL.");
+
+        if (btn === 2) {
+          // AI-Notemaking mode
+          const response = await axios.post(
+            "http://127.0.0.1:5000/api/notemaking",
+            { url, lang }
+          );
+          setsummaryresult(response.data.gentext);
+          settranscriptionresult(response.data.transtext);
+          setquiztoggle(response.data.quiztoggle);
+        }
+
+        navigate("/Process");
+      } catch (error) {
+        console.error("Error during processing:", error);
+        setErrorMessage(
+          "An error occurred while processing the video. Please try again."
+        );
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
   const submithandler2 = async () => {
-    const search = searchRef.current.value; // Extract the value
-    const lang = langRef2?.current?.value; // Extract the value
-    if (lang != undefined) {
-     setlang(lang);
+    // Clear previous error message
+    setErrorMessage("");
+
+    const search = searchRef.current.value.trim();
+    const lang = (langRef2?.current?.value || "english").trim().toLowerCase();
+
+    // Validate search input
+    if (!search) {
+      setErrorMessage("Please enter a search term.");
+      return;
     }
-    console.log("search:", search);
-    console.log("Language:", lang);
-    setIsLoading(true); // Show loading state
+
+    // Validate Language
+    if (!validateLanguage(lang)) {
+      setErrorMessage(
+        `Invalid language. Please choose from: ${options.join(", ")}.`
+      );
+      return;
+    }
+
+    setlang(lang);
 
     try {
-      setIsLoading(true); // Show loading state
+      setIsLoading(true);
       const response = await axios.post("http://127.0.0.1:5000/api/search", {
         search,
       });
       setsearchresult(response.data.videos);
-      console.log("api result : ", response.data.videos);
       navigate("/search");
     } catch (error) {
       console.error("Error during processing:", error);
-      alert("An error occurred. Please try again.");
+      setErrorMessage("An error occurred while searching. Please try again.");
     } finally {
-      setIsLoading(false); // Hide loading state
+      setIsLoading(false);
     }
   };
 
@@ -170,6 +191,7 @@ function Home() {
           paddingTop: "80px",
         }}
       >
+        {/* Rest of the existing component code remains the same */}
         <div className="form">
           <div className="text-center">
             <h6 style={{ height: "35px" }}>
@@ -224,7 +246,7 @@ function Home() {
                       color: isInnerChecked ? "white" : "crimson",
                       padding: "10px",
                       marginRight: "10px",
-                     // transform: `scale(${isInnerChecked ? 1 : 1.1})`,
+                      // transform: `scale(${isInnerChecked ? 1 : 1.1})`,
                       transform: isChecked ? "rotateY(180deg)" : "",
                       transition: "all 0.5s ease",
                       fontSize: "20px",
@@ -312,7 +334,7 @@ function Home() {
                           className="btn"
                           disabled={isLoading}
                         >
-                          Process
+                          Summary
                         </button>
                       </div>
                     )}
@@ -391,6 +413,41 @@ function Home() {
             </div>
           </div>
         </div>
+        {/* Error Message Modal */}
+        {errorMessage && (
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              zIndex: 1000,
+              maxWidth: "300px",
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ color: "red", marginBottom: "15px" }}>Error</h3>
+            <p>{errorMessage}</p>
+            <button
+              onClick={() => setErrorMessage("")}
+              style={{
+                marginTop: "15px",
+                padding: "10px 20px",
+                backgroundColor: "#f44336",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Close
+            </button>
+          </div>
+        )}
       </div>
       {isLoading && <Loading />}
     </>

@@ -84,6 +84,7 @@ export const AppProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isInnerChecked, setIsInnerChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [quiztoggle, setquiztoggle] = useState("");
   
 
   return (
@@ -108,6 +109,8 @@ export const AppProvider = ({ children }) => {
                 setIsInnerChecked,
                 isChecked,
                 setIsChecked,
+                quiztoggle,
+                setquiztoggle,
               }}
             >
               {children}

@@ -24,7 +24,7 @@ function Process() {
     transcriptionresult,
     settranscriptionresult,
   } = useContext(SummaryresultContext);
-  const { isInnerChecked, isLoading, setIsLoading } =
+  const { isInnerChecked, isLoading, setIsLoading,quiztoggle, setquiztoggle } =
     useContext(LoadingstateContext);
 
   const [quizclicked, setquizclicked] = useState(false);
@@ -194,7 +194,7 @@ function Process() {
         <div className="card1">
           <Ytcard videoId={yturl} />
         </div>
-        {(
+        {quiztoggle ==='enabled' && (
           <div style={{ display: "flex", gap: "10px" }}>
             <button className="btn" onClick={submitprompt}>
               {quizclicked ? "Refresh Quiz" : "Quiz"}
@@ -258,11 +258,11 @@ function Process() {
             margin: 30,
           }}
         >
-          <div className="form-group">
+          {/* <div className="form-group">
             <button className="btn">
               <span className="material-symbols-outlined">download</span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
