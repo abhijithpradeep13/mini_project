@@ -85,7 +85,7 @@ export const AppProvider = ({ children }) => {
   const [isInnerChecked, setIsInnerChecked] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [quiztoggle, setquiztoggle] = useState("");
-  
+  const [pdfdata, setpdfdata] = useState(null);
 
   return (
     <UrlContext.Provider value={{ yturl, setyturl }}>
@@ -98,6 +98,8 @@ export const AppProvider = ({ children }) => {
             setsummarypath,
             transcriptionresult,
             settranscriptionresult,
+            pdfdata,
+            setpdfdata,
           }}
         >
           <LangresultContext.Provider value={{ lang, setlang }}>

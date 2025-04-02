@@ -343,10 +343,8 @@ def notemaking():
     formatted_text = response2.text.replace("\n", "<br>")  # Convert newlines to HTML <br>
     formatted_text = formatted_text.replace("*   ", "&nbsp;&nbsp;&nbsp;&nbsp;* ")  # Preserve bullet points and indentation
     aigentext=response2.text
-    print(aigentext)
-
+    print("generated text -------",aigentext)
     
-    print(formatted_text)
 
     # Store the translated text in a new file
     aigenerated_file_path = os.path.join(output_path, f"{os.path.basename(summarized_file_path)}_aigenerated.txt")
@@ -360,7 +358,8 @@ def notemaking():
          'gentext': formatted_text,
          'aigenerated_file_path':aigenerated_file_path,
          "transtext":global_summarized_text,
-         'quiztoggle':'enabled'
+         'quiztoggle':'enabled',
+         'pdfdata':response2.text
         
     }),201
 

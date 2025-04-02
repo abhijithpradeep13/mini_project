@@ -14,8 +14,13 @@ import Loading from "./Loading";
 function Home() {
   const { setyturl } = useContext(UrlContext);
   const { setsearchresult } = useContext(searchresultContext);
-  const { setsummaryresult, setsummarypath, settranscriptionresult } =
-    useContext(SummaryresultContext);
+  const {
+    setsummaryresult,
+    setsummarypath,
+    settranscriptionresult,
+    pdfdata,
+    setpdfdata,
+  } = useContext(SummaryresultContext);
   const { setlang } = useContext(LangresultContext);
   const {
     isLoading,
@@ -126,6 +131,7 @@ function Home() {
           setsummaryresult(response.data.gentext);
           settranscriptionresult(response.data.transtext);
           setquiztoggle(response.data.quiztoggle);
+          setpdfdata(response.data.pdfdata);
         }
 
         navigate("/Process");

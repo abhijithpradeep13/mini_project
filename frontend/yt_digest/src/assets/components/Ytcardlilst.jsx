@@ -13,8 +13,13 @@ import "./Ytcardlist.css";
 
 function Ytcardlilst({ urlembedd, url }) {
   const { yturl, setyturl } = useContext(UrlContext);
-  const { summaryresult, setsummaryresult, settranscriptionresult } =
-    useContext(SummaryresultContext);
+  const {
+    summaryresult,
+    setsummaryresult,
+    settranscriptionresult,
+    pdfdata,
+    setpdfdata,
+  } = useContext(SummaryresultContext);
   const { lang, setlang  } = useContext(LangresultContext);
 
   const { isLoading, setIsLoading, isInnerChecked, isChecked, setquiztoggle } =
@@ -50,7 +55,7 @@ function Ytcardlilst({ urlembedd, url }) {
          setquiztoggle(response.data.quiztoggle);
 
          console.log("quiztoggle ", response.data.quiztoggle);
-            
+        setpdfdata(response.data.pdfdata);
         
       }
      
