@@ -1,7 +1,8 @@
-import React, { useRef, useContext, useState } from "react";
+import React, { useRef, useContext, useState,useEffect } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Hometext from "../components/hometext";
 import {
   UrlContext,
   searchresultContext,
@@ -32,6 +33,14 @@ function Home() {
     setquiztoggle,
   } = useContext(LoadingstateContext);
 
+
+  const textip = [
+    "Enter a youtube link",
+    "Or Search Youtube",
+    "Get Smart Summary ",
+    "Or notemaking with \nAI Notemaking",
+  ];
+
   // State for error handling
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -43,6 +52,22 @@ function Home() {
     setIsInnerChecked((prevState) => !prevState);
   };
 
+
+
+  const [showCardClass, setShowCardClass] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowCardClass(true);
+    }, 590); 
+
+    // Reset immediately when isChecked changes
+    setShowCardClass(false);
+
+    return () => clearTimeout(timeout);
+  }, [isChecked]);
+
+    
   const navigate = useNavigate();
 
   const urlRef = useRef(null);
@@ -185,16 +210,37 @@ function Home() {
   };
 
   return (
-    <>
+    <div className="home-wrapper">
+      <div
+        style={{
+          position: "absolute",
+          color: "#dc143c",
+          bottom: "-125px",
+          right: "53%",
+        }}
+      >
+        Ver 1.0
+      </div>
+      <div className="left-section">
+        <img
+          src="urllogo1.png"
+          alt="logo"
+          style={{ position: "absolute", left: "27px", top: "-70px" }}
+        />
+        <div style={{position:"absolute",top:"300px",left:"120px"}}>
+          
+          <Hometext texts={textip} interval={2000} speed={80} />
+        </div>
+      </div>
+      <div className="divider"></div>
       <div
         className="right-section"
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          opacity: isLoading ? "0.5" : "1",
           maxWidth: "100%",
-          paddingTop: "80px",
+          marginTop: "-18px",
         }}
       >
         {/* Rest of the existing component code remains the same */}
@@ -218,7 +264,8 @@ function Home() {
                 className="search"
                 style={{
                   color: isChecked ? "crimson" : "white",
-                  marginLeft: "10px",
+                  marginLeft: "8px",
+                  paddingRight: "14px",
                   transform: isChecked ? "scale(2)" : "scale(1)",
                   transition: "all 0.5s ease",
                   fontSize: "20px",
@@ -236,8 +283,8 @@ function Home() {
             />
             <label htmlFor="reg-log"></label>
 
-            <div className="card-3d-wrap">
-              <div className="card-3d-wrapper">
+            <div className={`card-3d-wrap ${showCardClass ? "card" : ""}`}>
+              <div className="card-3d-wrapper ">
                 <h6
                   style={{
                     height: "50px",
@@ -456,7 +503,7 @@ function Home() {
         )}
       </div>
       {isLoading && <Loading />}
-    </>
+    </div>
   );
 }
 

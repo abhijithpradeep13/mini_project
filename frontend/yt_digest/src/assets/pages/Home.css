@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
+
+
+
+
+
 :root {
-    --mainColor: crimson;
+    --mainColor: #dc143c;
     --black: #000000;
     --white: #FFFFFF;
     --whiteSmoke: #C4C3CA;
@@ -24,7 +29,7 @@ body {
     font-size: 16px;
     letter-spacing: 1px;
     font-weight: normal;
-    background-color: var(--black);
+    background-image: url("bghome.jpg");
 }
 
 a {
@@ -116,7 +121,60 @@ nav ul li a:hover {
 }
 
 /*MAIN*/
+.home-wrapper{
+    display: flex;
+    flex-direction: row;
+    width: 1536px;
+    position: relative;
+    
+}
+.left-section{
+    flex:1;
+    height:inherit;
+    position: relative;
+}
 
+.divider {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 450px;
+  background-color: #dc143c;
+  margin: 0 10px;
+  position: absolute;
+  left: 674px;
+  top: 80px;
+  border-radius: 5px 5px 25px 25px;
+}
+
+/* Tapered top end */
+.divider::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 8px;
+  height: 25px;
+  background-color: #dc143c;
+  border-radius: 100% 100% 5px 5px / 200% 200% 5px 5px;
+  transform: perspective(10px) rotateX(5deg);
+}
+
+/* Tapered bottom end */
+.divider::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  width: 8px;
+  height: 25px;
+  background-color: #dc143c;
+  border-radius: 5px 5px 100% 100% / 5px 5px 200% 200%;
+  transform: perspective(10px) rotateX(-5deg);
+}
+.right-section{
+    flex:1
+}
 .left,
 .right {
     flex: 0 0 50%;
@@ -319,7 +377,61 @@ for button checkbox
     margin-top: 60px;
     transform-style: preserve-3d;
     perspective: 800px;
+    transition: all 0.3s ease-in-out;
 }
+
+
+.card {
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0px 15px;
+  background-color: red;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  position: relative;
+
+  font-weight: 900;
+  transition-duration: .2s;
+  background: linear-gradient(0deg, #000, #272727);
+}
+
+.card:before, .card:after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #fb0094, #0000ff, #00ff00,#ffff00, #ff0000, #fb0094, 
+		#0000ff, #00ff00,#ffff00, #ff0000);
+  background-size: 400%;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: -1;
+  animation: steam 20s linear infinite;
+}
+
+@keyframes steam {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.card:after {
+  filter: blur(100px);
+}
+
 
 .card-3d-wrapper {
     width: 100%;
@@ -330,6 +442,45 @@ for button checkbox
     transform-style: preserve-3d;
     transition: all .6s ease-out;
 }
+
+/* .loader {
+  position: relative;
+  background: rgba(45, 45, 45, 1);
+  overflow: hidden;
+  transform: rotate(calc(90deg * 2));
+}
+
+.loader::before {
+ 
+  position: absolute;
+  background: radial-gradient(#f50076, transparent);
+  animation: animate 1.5s linear infinite;
+}
+
+.loader::after {
+  
+  position: absolute;
+  inset: 2px;
+  background: rgba(45, 45, 45, 0.9);
+}
+
+@keyframes animate {
+  0% {
+    transform: translate(-150px, -150px);
+  }
+  25% {
+    transform: translate(0px, -150px);
+  }
+  50% {
+    transform: translate(0px, 0px);
+  }
+  75% {
+    transform: translate(-150px, 0px);
+  }
+  100% {
+    transform: translate(-150px, -150px);
+  }
+} */
 
 .checkbox:checked~.card-3d-wrap .card-3d-wrapper {
     transform: rotateY(180deg);
@@ -519,4 +670,8 @@ for button checkbox
     .card-3d-wrap {
         width: 300px;
     }
+}
+
+.errorcontainer{
+    position: relative;
 }

@@ -127,17 +127,22 @@ const ErrorPage = ({ secondsLeft, navigateToHome }) => (
       height: "100%",
       textAlign: "center",
       padding: "20px",
+      position: "absolute",
+      top: "20px",
+      left: "700px",
     }}
   >
-    <h1 style={{ color: "#f44336" }}>Oops! Something went wrong</h1>
-    <p style={{ color: "#F0F0F0" }}>
+    <h1 style={{ color: "#f44336", display: "inline" }}>
+      Oops! Something went wrong
+    </h1>
+    <p style={{ color: "#F0F0F0", display: "inline" }}>
       Your session data was cleared. You'll be redirected to home in{" "}
       {secondsLeft} seconds.
     </p>
     <button
       className="btn"
       onClick={navigateToHome}
-      style={{ marginTop: "20px", backgroundColor: "#627835" }}
+      style={{ marginTop: "20px", backgroundColor: "#dc143c" }}
     >
       Go to Home Now
     </button>
@@ -552,7 +557,7 @@ function Process() {
   // If showing error page, display only that
   if (showErrorPage) {
     return (
-      <div className="container" style={{ height: "100vh" }}>
+      <div className="errorcontainer" style={{ height: "100vh" }}>
         <ErrorPage
           secondsLeft={redirectCounter}
           navigateToHome={navigateToHome}
@@ -653,7 +658,7 @@ function Process() {
           width: "800px",
           flexDirection: "column",
           margin: "25px",
-          padding: "10px",
+          padding: "20px",
           borderRadius: "15px",
           marginRight: "15px",
         }}
@@ -663,12 +668,14 @@ function Process() {
           style={{
             order: 1,
             backgroundColor: "white",
+            opacity:"1",
             padding: "20px",
             border: "5px black",
             borderRadius: "5px black",
-            maxHeight: "600px",
+            maxHeight: "650px",
             minWidth: "708px",
-            minHeight: "600px",
+            minHeight: "650px",
+            paddingTop:"25px"
           }}
         >
           {isLoading ? (
@@ -679,17 +686,7 @@ function Process() {
             <Summary />
           )}
         </div>
-        <div
-          className="bottom-container"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            order: 2,
-            margin: 30,
-          }}
-        >
+      
           {/* PDF Error Message Modal */}
           {pdfError && (
             <div
@@ -725,7 +722,7 @@ function Process() {
               </button>
             </div>
           )}
-        </div>
+        
       </div>
     </div>
   );
