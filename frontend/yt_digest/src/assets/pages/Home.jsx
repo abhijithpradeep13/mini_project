@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState,useEffect } from "react";
+import React, { useRef, useContext, useState, useEffect } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -33,7 +33,6 @@ function Home() {
     setquiztoggle,
   } = useContext(LoadingstateContext);
 
-
   const textip = [
     "Enter a youtube link",
     "Or Search Youtube",
@@ -52,14 +51,12 @@ function Home() {
     setIsInnerChecked((prevState) => !prevState);
   };
 
-
-
   const [showCardClass, setShowCardClass] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowCardClass(true);
-    }, 590); 
+    }, 590);
 
     // Reset immediately when isChecked changes
     setShowCardClass(false);
@@ -67,7 +64,6 @@ function Home() {
     return () => clearTimeout(timeout);
   }, [isChecked]);
 
-    
   const navigate = useNavigate();
 
   const urlRef = useRef(null);
@@ -215,8 +211,10 @@ function Home() {
         style={{
           position: "absolute",
           color: "#dc143c",
-          bottom: "-125px",
+          bottom: "-128px",
           right: "53%",
+          fontFamily: "amita",
+          fontSize: "20px",
         }}
       >
         Ver 1.0
@@ -227,8 +225,7 @@ function Home() {
           alt="logo"
           style={{ position: "absolute", left: "27px", top: "-70px" }}
         />
-        <div style={{position:"absolute",top:"300px",left:"120px"}}>
-          
+        <div style={{ position: "absolute", top: "300px", left: "120px" }}>
           <Hometext texts={textip} interval={2000} speed={80} />
         </div>
       </div>
