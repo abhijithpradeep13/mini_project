@@ -13,18 +13,19 @@ from googletrans import Translator
 
 from transformers import pipeline;
 
+from dotenv import load_dotenv
 
+load_dotenv()
+API_KEY1 = os.getenv("API_KEY1")
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 
 # Load Whisper model and Translator
 model = whisper.load_model("base")
 translator = Translator()
 
-# Summarization model setup
-#summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
-# client = genai.Client(api_key="AIzaSyAW01ornPnGix5--uXpMreboybWpcqCP8M")
-client = genai.Client(api_key="AIzaSyAuz0BcyZ7EuxfhJrQAW_PEUB1W7hGvKW4")  
+client = genai.Client(api_key=API_KEY1)  
 
 
 
@@ -36,7 +37,7 @@ CORS(app)
 
 
 # YouTube API credentials
-YOUTUBE_API_KEY = 'AIzaSyARvhH0rIG4XPkZ2hsENx6cwMijkxuEvMA'  # Replace with your API key
+
 youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 
 global_summarized_text = ""
